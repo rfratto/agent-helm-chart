@@ -1,14 +1,11 @@
-# Overrides the chart's name. Used to change the infix in the resource names.
+# -- Overrides the chart's name. Used to change the infix in the resource names.
 nameOverride: null
 
-# Overrides the chart's computed fullname. Used to change the full prefix of
+# -- Overrides the chart's computed fullname. Used to change the full prefix of
 # resource names.
 fullnameOverride: null
 
-# Grafana Agent configuration to use. Must be a valid River configuration file.
-# The config is mounted as /etc/agent/config.river in the container. If config
-# is not provided, an example configuraiton from ./config/example.river is
-# used.
+# -- Grafana Agent configuration to use.
 config: ""
 
 # Various agent settings.
@@ -52,46 +49,39 @@ image:
   pullSecrets: []
 
 rbac:
-  # -- Whether to create ClusterRole and a ClusterRoleBinding to allow created
-  # Grafana Agent pods to interact with the Kubernetes API. This is needed
-  # for components like discovery.kubernetes to function properly.
+  # -- Whether to create RBAC resources for the agent.
   create: true
 
 serviceAccount:
   # -- Whether to create a service account for the Grafana Agent deployment.
-  # If create is false, name must be set to an existing service account name.
   create: true
-  # -- Annotations to add to the service account when create is true.
+  # -- Annotations to add to the created service account.
   annotations: {}
-  # -- The name of the existing service account to use. Only used when create is
-  # false.
+  # -- The name of the existing service account to use when
+  # serviceAccount.create is false.
   name: null
 
 # Options for the extra controler used for config reloading.
 configReloader:
-  # -- Whether to use the config reloader to dynamically reload the agent config
-  # when the ConfigMap changes.
+  # -- Enables automatically reloading when the agent config changes.
   enabled: true
   image:
     # -- Repository to get config reloader image from.
     repository: weaveworks/watch
     # -- Tag of image to use for config reloading.
     tag: master-5fc29a9
-  # -- Override the args passed to the container. If left empty, default arguments
-  # are used.
+  # -- Override the args passed to the container.
   customArgs: []
 
 controller:
-  # -- Type of controller to use for deploying Grafana Agent in the cluster. Must
-  # be one of 'daemonset', 'deployment', or 'statefulset'. Some controller
-  # options only apply to certain types of controllers.
+  # -- Type of controller to use for deploying Grafana Agent in the cluster.
+  # Must be one of 'daemonset', 'deployment', or 'statefulset'.
   type: 'daemonset'
 
-  # -- Number of pods to deploy. Ignored when type is 'daemonset'.
+  # -- Number of pods to deploy. Ignored when controller.type is 'daemonset'.
   replicas: 1
 
-  # -- Update strategy for updating deployed Pods. Sets the "strategy" field when
-  # type is "deployment", or the "updateStrategy" field otherwise.
+  # -- Update strategy for updating deployed Pods.
   updateStrategy: {}
 
   # -- Tolerations to apply to Grafana Agent pods.
@@ -100,10 +90,7 @@ controller:
   # -- Extra pod annotations to add.
   podAnnotations: {}
 
-  # -- Security context to apply to created Grafana Agent pods. By default,
-  # privileged is enabled and the agent runs as root to allow it to access
-  # resources from the host for telemetry data (logs, /proc, /dev). Locking
-  # this down will restrict the agent's ability to collect host telemetry.
+  # -- Security context to apply to created Grafana Agent pods.
   securityContext:
     privileged: true
     runAsUser: 0
@@ -112,13 +99,10 @@ controller:
   resources: {}
 
   volumes:
-    # -- Extra volumes to add to the Grafana Agent pod. These are not mounted by
-    # default; use agent.mounts.extra to mount them.
+    # -- Extra volumes to add to the Grafana Agent pod.
     extra: []
 
-  # -- volumeClaimTemplates to add when type is 'statefulset'. When this is
-  # non-empty, agent.mounts.extra must include a mount for every claim template
-  # defined here.
+  # -- volumeClaimTemplates to add when controller.type is 'statefulset'.
   volumeClaimTemplates: []
 
 

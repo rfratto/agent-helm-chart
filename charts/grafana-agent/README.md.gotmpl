@@ -3,3 +3,47 @@
 {{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
 
 {{ template "chart.valuesSection" . }}
+
+### agent.extraArgs
+
+`agent.extraArgs` allows for passing extra arguments to the Grafana Agent
+container. The list of available arguments is documented on [agent run][].
+
+> **WARNING**: Using `agent.extraArgs` does not have a stable API. Things may
+> break between Chart upgrade if an argument gets added to the template.
+
+[agent run]: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
+
+### agent.listenAddr
+
+`agent.listenAddr` allows for restricting which address the agent listens on
+for network traffic on its HTTP server. By default, this is `0.0.0.0` to allow
+its UI to be exposed when port-forwarding and to expose its metrics to other
+agents in the cluster.
+
+### config
+
+`config` holds the Grafana Agent configuration to use.
+
+If `config` is not provided, a [default configuration file][default-config] is
+used. When provided, `config` must hold a valid River configuration file.
+
+[default-config]: ./config/example.river
+
+### controller.securityContext
+
+`controller.securityContext` sets the securityContext passed to the Grafana
+Agent container. By default, `privileged: true` and `runAsUser: 0` are set to
+allow the Grafana Agent container to access resources from the host for
+telemetry data (such as logs, and reading metrics from /proc and /dev).
+
+Locking down `controller.securityContext` will restrict the agent's ability to
+collect telemetry from the host node.
+
+### rbac.create
+
+`rbac.create` enables the creation of ClusterRole and ClusterRoleBindings for
+the Grafana Agent containers to use. The default permission set allows Flow
+components like [discovery.kubernetes][] to work properly.
+
+[discovery.kubernetes]: https://grafana.com/docs/agent/latest/flow/reference/components/discovery.kubernetes/
