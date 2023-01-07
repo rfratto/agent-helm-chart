@@ -29,10 +29,10 @@ agent:
 
   mounts:
     # -- Mount /var/log from the host into the container for log collection.
-    varlog: true
+    varlog: false
     # -- Mount /var/lib/docker/containers from the host into the container for log
     # collection.
-    dockercontainers: true
+    dockercontainers: false
 
     # -- Extra volume mounts to add into the Grafana Agent container. Does not
     # affect the watch container.
@@ -91,9 +91,7 @@ controller:
   podAnnotations: {}
 
   # -- Security context to apply to created Grafana Agent pods.
-  securityContext:
-    privileged: true
-    runAsUser: 0
+  securityContext: {}
 
   # -- Resource requests and limits to apply to created Grafana Agent pods.
   resources: {}

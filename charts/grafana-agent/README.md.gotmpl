@@ -33,12 +33,13 @@ used. When provided, `config` must hold a valid River configuration file.
 ### controller.securityContext
 
 `controller.securityContext` sets the securityContext passed to the Grafana
-Agent container. By default, `privileged: true` and `runAsUser: 0` are set to
-allow the Grafana Agent container to access resources from the host for
-telemetry data (such as logs, and reading metrics from /proc and /dev).
+Agent container.
 
-Locking down `controller.securityContext` will restrict the agent's ability to
-collect telemetry from the host node.
+By default, Grafana Agent containers are not able to collect telemetry from the
+host node or other specific types of privileged telemetry data. See [Collecting
+logs from other containers][#collecting-logs-from-other-containers] and
+[Collecting host node telemetry][#collecting-host-node-telemetry] below for
+more information on how to enable these capabilities.
 
 ### rbac.create
 
@@ -47,3 +48,33 @@ the Grafana Agent containers to use. The default permission set allows Flow
 components like [discovery.kubernetes][] to work properly.
 
 [discovery.kubernetes]: https://grafana.com/docs/agent/latest/flow/reference/components/discovery.kubernetes/
+
+## Collecting logs from other containers
+
+Currently, the only way to collect logs from other contains is to mount
+`/var/lib/docker/containers` from the host and read the log files directly.
+This capability is disabled by default.
+
+To expose logs from other containers to Grafana Agent:
+
+* Set `agent.mounts.dockercontainers` to `true`.
+* Set `controller.securityContext` to:
+  ```yaml
+  privileged: true
+  runAsUser: 0
+  ```
+
+## Collecting host node telemetry
+
+Telemetry from the host, such as host-specific log files (from `/var/logs`) or
+metrics from `/proc` and `/sys` are not accessible to Grafana Agent containers.
+
+To expose this information to Grafana Agent for telemetry collection:
+
+* Set `agent.mounts.dockercontainers` to `true`.
+* Mount `/proc` and `/sys` from the host into the container.
+* Set `controller.securityContext` to:
+  ```yaml
+  privileged: true
+  runAsUser: 0
+  ```

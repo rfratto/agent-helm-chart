@@ -10,9 +10,9 @@
 | agent.extraArgs | list | `[]` | Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/ |
 | agent.listenAddr | string | `"0.0.0.0"` | Address to listen for traffic on. 0.0.0.0 exposes the UI to other containers. |
 | agent.listenPort | int | `80` | Port to listen for traffic on. |
-| agent.mounts.dockercontainers | bool | `true` | Mount /var/lib/docker/containers from the host into the container for log collection. |
+| agent.mounts.dockercontainers | bool | `false` | Mount /var/lib/docker/containers from the host into the container for log collection. |
 | agent.mounts.extra | list | `[]` | Extra volume mounts to add into the Grafana Agent container. Does not affect the watch container. |
-| agent.mounts.varlog | bool | `true` | Mount /var/log from the host into the container for log collection. |
+| agent.mounts.varlog | bool | `false` | Mount /var/log from the host into the container for log collection. |
 | agent.storagePath | string | `"/tmp/agent"` | Path to where Grafana Agent stores data (for example, the Write-Ahead Log). By default, data is lost between reboots. |
 | config | string | `""` | Grafana Agent configuration to use. |
 | configReloader.customArgs | list | `[]` | Override the args passed to the container. |
@@ -22,7 +22,7 @@
 | controller.podAnnotations | object | `{}` | Extra pod annotations to add. |
 | controller.replicas | int | `1` | Number of pods to deploy. Ignored when controller.type is 'daemonset'. |
 | controller.resources | object | `{}` | Resource requests and limits to apply to created Grafana Agent pods. |
-| controller.securityContext | object | `{"privileged":true,"runAsUser":0}` | Security context to apply to created Grafana Agent pods. |
+| controller.securityContext | object | `{}` | Security context to apply to created Grafana Agent pods. |
 | controller.tolerations | list | `[]` | Tolerations to apply to Grafana Agent pods. |
 | controller.type | string | `"daemonset"` | Type of controller to use for deploying Grafana Agent in the cluster. Must be one of 'daemonset', 'deployment', or 'statefulset'. |
 | controller.updateStrategy | object | `{}` | Update strategy for updating deployed Pods. |
@@ -68,12 +68,13 @@ used. When provided, `config` must hold a valid River configuration file.
 ### controller.securityContext
 
 `controller.securityContext` sets the securityContext passed to the Grafana
-Agent container. By default, `privileged: true` and `runAsUser: 0` are set to
-allow the Grafana Agent container to access resources from the host for
-telemetry data (such as logs, and reading metrics from /proc and /dev).
+Agent container.
 
-Locking down `controller.securityContext` will restrict the agent's ability to
-collect telemetry from the host node.
+By default, Grafana Agent containers are not able to collect telemetry from the
+host node or other specific types of privileged telemetry data. See [Collecting
+logs from other containers][#collecting-logs-from-other-containers] and
+[Collecting host node telemetry][#collecting-host-node-telemetry] below for
+more information on how to enable these capabilities.
 
 ### rbac.create
 
@@ -82,3 +83,33 @@ the Grafana Agent containers to use. The default permission set allows Flow
 components like [discovery.kubernetes][] to work properly.
 
 [discovery.kubernetes]: https://grafana.com/docs/agent/latest/flow/reference/components/discovery.kubernetes/
+
+## Collecting logs from other containers
+
+Currently, the only way to collect logs from other contains is to mount
+`/var/lib/docker/containers` from the host and read the log files directly.
+This capability is disabled by default.
+
+To expose logs from other containers to Grafana Agent:
+
+* Set `agent.mounts.dockercontainers` to `true`.
+* Set `controller.securityContext` to:
+  ```yaml
+  privileged: true
+  runAsUser: 0
+  ```
+
+## Collecting host node telemetry
+
+Telemetry from the host, such as host-specific log files (from `/var/logs`) or
+metrics from `/proc` and `/sys` are not accessible to Grafana Agent containers.
+
+To expose this information to Grafana Agent for telemetry collection:
+
+* Set `agent.mounts.dockercontainers` to `true`.
+* Mount `/proc` and `/sys` from the host into the container.
+* Set `controller.securityContext` to:
+  ```yaml
+  privileged: true
+  runAsUser: 0
+  ```
