@@ -25,72 +25,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: grafana-agent
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          command:
-            - /bin/agent
-            - run
-            - /etc/agent/config.river
-          args:
-            - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}
-            {{- if not .Values.agent.enableReporting }}
-            - --disable-reporting
-            {{- end}}
-            {{- range .Values.agent.extraArgs }}
-            - {{ . }}
-            {{- end}}
-          env:
-            - name: AGENT_MODE
-              value: flow
-            - name: HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-          ports:
-            - containerPort: {{ .Values.agent.listenPort }}
-              name: http-metrics
-          readinessProbe:
-            httpGet:
-              path: /-/ready
-              port: {{ .Values.agent.listenPort }}
-            initialDelaySeconds: 10
-            timeoutSeconds: 1
-          resources:
-            {{- toYaml .Values.controller.resources | nindent 12 }}
-          securityContext:
-            {{- toYaml .Values.controller.securityContext | nindent 12 }}
-          volumeMounts:
-            - name: config
-              mountPath: /etc/agent
-            - name: varlog
-              mountPath: /var/log
-              readOnly: true
-            - name: dockercontainers
-              mountPath: /var/lib/docker/containers
-              readOnly: true
-        {{- if .Values.configReloader.enabled }}
-        - name: config-reloader
-          image: {{ .Values.configReloader.image.repository }}:{{ .Values.configReloader.image.tag }}
-          {{- if .Values.configReloader.customArgs }}
-          args:
-            {{- toYaml .Values.configReloader.customArgs | nindent 12 }}
-          {{- else }}
-          args:
-            - -v
-            - -p=/etc/agent/config.river
-            - curl
-            - -X
-            - POST
-            - --fail
-            - -o
-            - '-'
-            - -sS
-            - http://localhost:80/-/reload
-          {{- end }}
-          volumeMounts:
-            - name: config
-              mountPath: /etc/agent
-        {{- end }}
+        {{- include "grafana-agent.container" . | nindent 8 }}
+        {{- include "grafana-agent.watch-container" . | nindent 8 }}
       tolerations:
         {{- toYaml .Values.controller.tolerations | nindent 8 }}
       volumes:
