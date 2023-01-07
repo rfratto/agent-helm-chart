@@ -16,7 +16,7 @@
     - -o
     - '-'
     - -sS
-    - http://localhost:80/-/reload
+    - http://localhost:{{ .Values.agent.listenPort }}/-/reload
   {{- end }}
   volumeMounts:
     - name: config

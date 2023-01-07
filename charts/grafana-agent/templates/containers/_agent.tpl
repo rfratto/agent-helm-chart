@@ -30,10 +30,14 @@
       port: {{ .Values.agent.listenPort }}
     initialDelaySeconds: 10
     timeoutSeconds: 1
+  {{- with .Values.controller.resources }}
   resources:
-    {{- toYaml .Values.controller.resources | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.controller.securityContext }}
   securityContext:
-    {{- toYaml .Values.controller.securityContext | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   volumeMounts:
     - name: config
       mountPath: /etc/agent

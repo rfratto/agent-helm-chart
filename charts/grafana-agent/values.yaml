@@ -94,7 +94,7 @@ controller:
   updateStrategy: {}
 
   # Tolerations to apply to Grafana Agent pods.
-  tolerations: {}
+  tolerations: []
 
   podAnnotations: {}
 

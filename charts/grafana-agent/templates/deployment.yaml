@@ -1,11 +1,12 @@
-{{- if eq .Values.controller.type "daemonset" }}
+{{- if eq .Values.controller.type "deployment" }}
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: {{ include "grafana-agent.fullname" . }}
   labels:
     {{- include "grafana-agent.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.controller.replicas }}
   minReadySeconds: 10
   selector:
     matchLabels:
@@ -49,7 +50,7 @@ spec:
         - {{ toYaml . | nindent 10 }}
         {{- end }}
   {{- with .Values.controller.updateStrategy }}
-  updateStrategy:
+  strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
