@@ -6,6 +6,7 @@
     - run
     - /etc/agent/config.river
   args:
+    - --storage.path={{ .Values.agent.storagePath }}
     - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}
     {{- if not .Values.agent.enableReporting }}
     - --disable-reporting
@@ -45,5 +46,8 @@
     - name: dockercontainers
       mountPath: /var/lib/docker/containers
       readOnly: true
+    {{- end }}
+    {{- range .Values.agent.mounts.extra }}
+    - {{ toYaml . | nindent 6 }}
     {{- end }}
 {{- end }}

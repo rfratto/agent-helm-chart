@@ -13,6 +13,10 @@ config: ""
 
 # Various agent settings.
 agent:
+  # Path to where Grafana Agent stores data (for example, the Write-Ahead Log).
+  # By default, data is lost between reboots.
+  storagePath: /tmp/agent
+
   # Address to listen for traffic on. 0.0.0.0 exposes the UI to other
   # containers.
   listenAddr: 0.0.0.0
@@ -33,6 +37,10 @@ agent:
     # Mount /var/lib/docker/containers from the host into the container for log
     # collection.
     dockercontainers: true
+
+    # Extra volume mounts to add into the Grafana Agent container. Does not
+    # affect the watch container.
+    extra: []
 
 image:
   # Grafana Agent image repository.
@@ -95,3 +103,9 @@ controller:
 
   # Resource requests and limits to apply to created Grafana Agent pods.
   resources: {}
+
+  volumes:
+    # Extra volumes to add to the Grafana Agent pod. These are not mounted by
+    # default; use agent.mounts.extra to mount them.
+    extra: []
+

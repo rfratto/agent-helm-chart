@@ -43,6 +43,9 @@ spec:
           hostPath:
             path: /var/lib/docker/containers
         {{- end }}
+        {{- range .Values.controller.volumes.extra }}
+        - {{ toYaml . | nindent 10 }}
+        {{- end }}
   updateStrategy:
     {{- toYaml .Values.controller.updateStrategy | nindent 4 }}
 {{- end }}
