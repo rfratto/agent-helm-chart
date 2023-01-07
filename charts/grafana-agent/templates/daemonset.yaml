@@ -33,12 +33,16 @@ spec:
         - name: config
           configMap:
             name: {{ include "grafana-agent.fullname" . }}
+        {{- if .Values.agent.mounts.varlog }}
         - name: varlog
           hostPath:
             path: /var/log
+        {{- end }}
+        {{- if .Values.agent.mounts.dockercontainers }}
         - name: dockercontainers
           hostPath:
             path: /var/lib/docker/containers
+        {{- end }}
   updateStrategy:
     {{- toYaml .Values.controller.updateStrategy | nindent 4 }}
 {{- end }}

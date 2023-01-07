@@ -36,10 +36,14 @@
   volumeMounts:
     - name: config
       mountPath: /etc/agent
+    {{- if .Values.agent.mounts.varlog }}
     - name: varlog
       mountPath: /var/log
       readOnly: true
+    {{- end }}
+    {{- if .Values.agent.mounts.dockercontainers }}
     - name: dockercontainers
       mountPath: /var/lib/docker/containers
       readOnly: true
+    {{- end }}
 {{- end }}

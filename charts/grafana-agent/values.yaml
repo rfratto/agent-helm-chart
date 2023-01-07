@@ -13,7 +13,10 @@ config: ""
 
 # Various agent settings.
 agent:
+  # Address to listen for traffic on. 0.0.0.0 exposes the UI to other
+  # containers.
   listenAddr: 0.0.0.0
+  # Port to listen for traffic on.
   listenPort: 80
 
   # Enables sending Grafana Labs anonymous usage stats to help improve Grafana
@@ -23,6 +26,13 @@ agent:
   # Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
   # --server.http.listen-addr is always passed.
   extraArgs: []
+
+  mounts:
+    # Mount /var/log from the host into the container for log collection.
+    varlog: true
+    # Mount /var/lib/docker/containers from the host into the container for log
+    # collection.
+    dockercontainers: true
 
 image:
   # Grafana Agent image repository.
