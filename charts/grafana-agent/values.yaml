@@ -21,6 +21,12 @@ image:
   # Optional set of image pull secrets.
   pullSecrets: []
 
+rbac:
+  # Whether to create ClusterRole and a ClusterRoleBinding to allow created
+  # Grafana Agent pods to interact with the Kubernetes API. This is needed
+  # for components like discovery.kubernetes to function properly.
+  create: true
+
 serviceAccount:
   # Whether to create a service account for the Grafana Agent deployment.
   # If create is false, name must be set to an existing service account name.
@@ -56,24 +62,13 @@ controller:
   # type is "deployment", or the "updateStrategy" field otherwise.
   updateStrategy: {}
 
+  # Tolerations to apply to Grafana Agent pods.
+  tolerations: {}
+
   podAnnotations: {}
 
+  # Security context to apply to created Grafana Agent pods.
   securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
 
+  # Resource requests and limits to apply to created Grafana Agent pods.
   resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
