@@ -13,9 +13,16 @@ config: ""
 
 # Various agent settings.
 agent:
+  listenAddr: 0.0.0.0
+  listenPort: 80
+
   # Enables sending Grafana Labs anonymous usage stats to help improve Grafana
   # Agent.
   enableReporting: true
+
+  # Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
+  # --server.http.listen-addr is always passed.
+  extraArgs: []
 
 image:
   # Grafana Agent image repository.

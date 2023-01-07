@@ -32,9 +32,12 @@ spec:
             - run
             - /etc/agent/config.river
           args:
-            - --server.http.listen-addr=0.0.0.0:80
+            - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}
             {{- if not .Values.agent.enableReporting }}
             - --disable-reporting
+            {{- end}}
+            {{- range .Values.agent.extraArgs }}
+            - {{ . }}
             {{- end}}
           env:
             - name: AGENT_MODE
@@ -44,12 +47,12 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.agent.listenPort }}
               name: http-metrics
           readinessProbe:
             httpGet:
               path: /-/ready
-              port: 80
+              port: {{ .Values.agent.listenPort }}
             initialDelaySeconds: 10
             timeoutSeconds: 1
           resources:
