@@ -11,43 +11,7 @@ spec:
     matchLabels:
       {{- include "grafana-agent.selectorLabels" . | nindent 6 }}
   template:
-    metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      labels:
-        {{- include "grafana-agent.selectorLabels" . | nindent 8 }}
-    spec:
-      serviceAccount: {{ include "grafana-agent.serviceAccountName" . }}
-      {{- with .Values.image.pullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      containers:
-        {{- include "grafana-agent.container" . | nindent 8 }}
-        {{- include "grafana-agent.watch-container" . | nindent 8 }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      volumes:
-        - name: config
-          configMap:
-            name: {{ include "grafana-agent.fullname" . }}
-        {{- if .Values.agent.mounts.varlog }}
-        - name: varlog
-          hostPath:
-            path: /var/log
-        {{- end }}
-        {{- if .Values.agent.mounts.dockercontainers }}
-        - name: dockercontainers
-          hostPath:
-            path: /var/lib/docker/containers
-        {{- end }}
-        {{- range .Values.controller.volumes.extra }}
-        - {{ toYaml . | nindent 10 }}
-        {{- end }}
+    {{- include "grafana-agent.pod-template" . | nindent 4 }}
   {{- with .Values.controller.updateStrategy }}
   updateStrategy:
     {{- toYaml . | nindent 4 }}
