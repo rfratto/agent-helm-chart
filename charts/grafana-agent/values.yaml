@@ -98,8 +98,13 @@ controller:
 
   podAnnotations: {}
 
-  # Security context to apply to created Grafana Agent pods.
-  securityContext: {}
+  # Security context to apply to created Grafana Agent pods. By default,
+  # privileged is enabled and the agent runs as root to allow it to access
+  # resources from the host for telemetry data (logs, /proc, /dev). Locking
+  # this down will restrict the agent's ability to collect host telemetry.
+  securityContext:
+    privileged: true
+    runAsUser: 0
 
   # Resource requests and limits to apply to created Grafana Agent pods.
   resources: {}
@@ -108,4 +113,10 @@ controller:
     # Extra volumes to add to the Grafana Agent pod. These are not mounted by
     # default; use agent.mounts.extra to mount them.
     extra: []
+
+  # volumeClaimTemplates to add when type is 'statefulset'. When this is
+  # non-empty, agent.mounts.extra must include a mount for every claim template
+  # defined here.
+  volumeClaimTemplates: []
+
 
