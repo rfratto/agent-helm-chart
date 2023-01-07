@@ -13,92 +13,94 @@ config: ""
 
 # Various agent settings.
 agent:
-  # Path to where Grafana Agent stores data (for example, the Write-Ahead Log).
+  # -- Path to where Grafana Agent stores data (for example, the Write-Ahead Log).
   # By default, data is lost between reboots.
   storagePath: /tmp/agent
 
-  # Address to listen for traffic on. 0.0.0.0 exposes the UI to other
+  # -- Address to listen for traffic on. 0.0.0.0 exposes the UI to other
   # containers.
   listenAddr: 0.0.0.0
-  # Port to listen for traffic on.
+  # -- Port to listen for traffic on.
   listenPort: 80
 
-  # Enables sending Grafana Labs anonymous usage stats to help improve Grafana
+  # -- Enables sending Grafana Labs anonymous usage stats to help improve Grafana
   # Agent.
   enableReporting: true
 
-  # Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
-  # --server.http.listen-addr is always passed.
+  # -- Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
   extraArgs: []
 
   mounts:
-    # Mount /var/log from the host into the container for log collection.
+    # -- Mount /var/log from the host into the container for log collection.
     varlog: true
-    # Mount /var/lib/docker/containers from the host into the container for log
+    # -- Mount /var/lib/docker/containers from the host into the container for log
     # collection.
     dockercontainers: true
 
-    # Extra volume mounts to add into the Grafana Agent container. Does not
+    # -- Extra volume mounts to add into the Grafana Agent container. Does not
     # affect the watch container.
     extra: []
 
 image:
-  # Grafana Agent image repository.
+  # -- Grafana Agent image repository.
   repository: grafana/agent
-  # Grafana Agent image tag.
+  # -- Grafana Agent image tag.
   tag: v0.30.1
-  # Grafana Agent image pull policy.
+  # -- Grafana Agent image pull policy.
   pullPolicy: IfNotPresent
-  # Optional set of image pull secrets.
+  # -- Optional set of image pull secrets.
   pullSecrets: []
 
 rbac:
-  # Whether to create ClusterRole and a ClusterRoleBinding to allow created
+  # -- Whether to create ClusterRole and a ClusterRoleBinding to allow created
   # Grafana Agent pods to interact with the Kubernetes API. This is needed
   # for components like discovery.kubernetes to function properly.
   create: true
 
 serviceAccount:
-  # Whether to create a service account for the Grafana Agent deployment.
+  # -- Whether to create a service account for the Grafana Agent deployment.
   # If create is false, name must be set to an existing service account name.
   create: true
-  # Annotations to add to the service account when create is true.
+  # -- Annotations to add to the service account when create is true.
   annotations: {}
-  # The name of the existing service account to use. Only used when create is
+  # -- The name of the existing service account to use. Only used when create is
   # false.
   name: null
 
 # Options for the extra controler used for config reloading.
 configReloader:
-  # Whether to use the config reloader to dynamically reload the agent config
+  # -- Whether to use the config reloader to dynamically reload the agent config
   # when the ConfigMap changes.
   enabled: true
   image:
+    # -- Repository to get config reloader image from.
     repository: weaveworks/watch
+    # -- Tag of image to use for config reloading.
     tag: master-5fc29a9
-  # Override the args passed to the container. If left empty, default arguments
+  # -- Override the args passed to the container. If left empty, default arguments
   # are used.
   customArgs: []
 
 controller:
-  # Type of controller to use for deploying Grafana Agent in the cluster. Must
+  # -- Type of controller to use for deploying Grafana Agent in the cluster. Must
   # be one of 'daemonset', 'deployment', or 'statefulset'. Some controller
   # options only apply to certain types of controllers.
   type: 'daemonset'
 
-  # Number of pods to deploy. Ignored when type is 'daemonset'.
+  # -- Number of pods to deploy. Ignored when type is 'daemonset'.
   replicas: 1
 
-  # Update strategy for updating deployed Pods. Sets the "strategy" field when
+  # -- Update strategy for updating deployed Pods. Sets the "strategy" field when
   # type is "deployment", or the "updateStrategy" field otherwise.
   updateStrategy: {}
 
-  # Tolerations to apply to Grafana Agent pods.
+  # -- Tolerations to apply to Grafana Agent pods.
   tolerations: []
 
+  # -- Extra pod annotations to add.
   podAnnotations: {}
 
-  # Security context to apply to created Grafana Agent pods. By default,
+  # -- Security context to apply to created Grafana Agent pods. By default,
   # privileged is enabled and the agent runs as root to allow it to access
   # resources from the host for telemetry data (logs, /proc, /dev). Locking
   # this down will restrict the agent's ability to collect host telemetry.
@@ -106,15 +108,15 @@ controller:
     privileged: true
     runAsUser: 0
 
-  # Resource requests and limits to apply to created Grafana Agent pods.
+  # -- Resource requests and limits to apply to created Grafana Agent pods.
   resources: {}
 
   volumes:
-    # Extra volumes to add to the Grafana Agent pod. These are not mounted by
+    # -- Extra volumes to add to the Grafana Agent pod. These are not mounted by
     # default; use agent.mounts.extra to mount them.
     extra: []
 
-  # volumeClaimTemplates to add when type is 'statefulset'. When this is
+  # -- volumeClaimTemplates to add when type is 'statefulset'. When this is
   # non-empty, agent.mounts.extra must include a mount for every claim template
   # defined here.
   volumeClaimTemplates: []
