@@ -11,6 +11,12 @@ fullnameOverride: null
 # used.
 config: ""
 
+# Various agent settings.
+agent:
+  # Enables sending Grafana Labs anonymous usage stats to help improve Grafana
+  # Agent.
+  enableReporting: true
+
 image:
   # Grafana Agent image repository.
   repository: grafana/agent
