@@ -1,0 +1,79 @@
+# Overrides the chart's name. Used to change the infix in the resource names.
+nameOverride: null
+
+# Overrides the chart's computed fullname. Used to change the full prefix of
+# resource names.
+fullnameOverride: null
+
+# Grafana Agent configuration to use. Must be a valid River configuration file.
+# The config is mounted as /etc/agent/config.river in the container. If config
+# is not provided, an example configuraiton from ./config/example.river is
+# used.
+config: ""
+
+image:
+  # Grafana Agent image repository.
+  repository: grafana/agent
+  # Grafana Agent image tag.
+  tag: v0.30.1
+  # Grafana Agent image pull policy.
+  pullPolicy: IfNotPresent
+  # Optional set of image pull secrets.
+  pullSecrets: []
+
+serviceAccount:
+  # Whether to create a service account for the Grafana Agent deployment.
+  # If create is false, name must be set to an existing service account name.
+  create: true
+  # Annotations to add to the service account when create is true.
+  annotations: {}
+  # The name of the existing service account to use. Only used when create is
+  # false.
+  name: null
+
+# Options for the extra controler used for config reloading.
+configReloader:
+  # Whether to use the config reloader to dynamically reload the agent config
+  # when the ConfigMap changes.
+  enabled: true
+  image:
+    repository: weaveworks/watch
+    tag: master-5fc29a9
+  # Override the args passed to the container. If left empty, default arguments
+  # are used.
+  customArgs: []
+
+controller:
+  # Type of controller to use for deploying Grafana Agent in the cluster. Must
+  # be one of 'daemonset', 'deployment', or 'statefulset'. Some controller
+  # options only apply to certain types of controllers.
+  type: 'daemonset'
+
+  # Number of pods to deploy. Ignored when type is 'daemonset'.
+  replicas: 1
+
+  # Update strategy for updating deployed Pods. Sets the "strategy" field when
+  # type is "deployment", or the "updateStrategy" field otherwise.
+  updateStrategy: {}
+
+  podAnnotations: {}
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi

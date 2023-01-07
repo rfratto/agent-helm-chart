@@ -1,0 +1,102 @@
+{{- if eq .Values.controller.type "daemonset" }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "grafana-agent.fullname" . }}
+  labels:
+    {{- include "grafana-agent.labels" . | nindent 4 }}
+spec:
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      {{- include "grafana-agent.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "grafana-agent.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccount: {{ include "grafana-agent.serviceAccountName" . }}
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: grafana-agent
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command:
+            - /bin/agent
+            - run
+            - /etc/agent/config.river
+          args:
+            - --server.http.listen-addr=0.0.0.0:80
+          env:
+            - name: AGENT_MODE
+              value: flow
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - containerPort: 80
+              name: http-metrics
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.controller.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.controller.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/agent
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: dockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+        {{- if .Values.configReloader.enabled }}
+        - name: config-reloader
+          image: {{ .Values.configReloader.image.repository }}:{{ .Values.configReloader.image.tag }}
+          {{- if .Values.configReloader.customArgs }}
+          args:
+            {{- toYaml .Values.configReloader.customArgs | nindent 12 }}
+          {{- else }}
+          args:
+            - -v
+            - -p=/etc/agent/config.river
+            - curl
+            - -X
+            - POST
+            - --fail
+            - -o
+            - '-'
+            - -sS
+            - http://localhost:80/-/reload
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/agent
+        {{- end }}
+      tolerations:
+        {{- toYaml .Values.controller.tolerations | nindent 8 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "grafana-agent.fullname" . }}
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: dockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+  updateStrategy:
+    {{- toYaml .Values.controller.updateStrategy | nindent 4 }}
+{{- end }}

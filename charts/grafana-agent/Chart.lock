@@ -1,0 +1,6 @@
+dependencies:
+- name: grafana-agent-crds
+  repository: file://charts/grafana-agent-crds
+  version: 0.1.0
+digest: sha256:0594c29851ec818a90ef8d0270e7a06e0f1f5739fa993c00d4ae59a3226a8d98
+generated: "2023-01-06T23:45:39.819585-05:00"
