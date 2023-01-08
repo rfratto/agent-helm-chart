@@ -20,3 +20,7 @@ jobs:
             echo "Helm chart tests are not up to date. Please run make rebuild-tests and commit changes!" >&2
             exit 1
           fi
+          if [ ! -z "$(git status --porcelain)" ]; then
+            echo "Uncommited chart tests found. Please run make rebuild-tests and commit changes!" >&2
+            exit 1
+          fi
