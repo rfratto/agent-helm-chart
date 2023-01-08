@@ -42,7 +42,7 @@ image:
   # -- Grafana Agent image repository.
   repository: grafana/agent
   # -- Grafana Agent image tag.
-  tag: v0.30.1
+  tag: "{{ .Chart.AppVersion }}"
   # -- Grafana Agent image pull policy.
   pullPolicy: IfNotPresent
   # -- Optional set of image pull secrets.

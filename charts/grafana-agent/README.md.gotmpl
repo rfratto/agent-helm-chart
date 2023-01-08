@@ -1,6 +1,6 @@
 # Grafana Agent Helm chart
 
-{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+{{ template "chart.typeBadge" . }}{{ template "chart.versionBadge" . }}{{ template "chart.appVersionBadge" . }}
 
 > **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
 > It is undergoing active development and it is not recommended to use this
@@ -12,6 +12,16 @@
 Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
 
 [Flow]: https://grafana.com/docs/agent/latest/flow/
+
+## Usage
+
+This chart installs one instance of Grafana Agent into your Kubernetes cluster
+using a specific Kubernetes controller. By default, DaemonSet is used. The
+`controller.type` value can be used to change the controller to either a
+StatefulSet or Deployment.
+
+Creating multiple installations of the Helm chart with different controllers is
+useful if just using the default DaemonSet isn't sufficient.
 
 {{ template "chart.valuesSection" . }}
 

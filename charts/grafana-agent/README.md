@@ -1,6 +1,6 @@
 # Grafana Agent Helm chart
 
-![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
+![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.1.0-alpha.1](https://img.shields.io/badge/Version-0.1.0--alpha.1-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
 
 > **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
 > It is undergoing active development and it is not recommended to use this
@@ -12,6 +12,16 @@
 Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
 
 [Flow]: https://grafana.com/docs/agent/latest/flow/
+
+## Usage
+
+This chart installs one instance of Grafana Agent into your Kubernetes cluster
+using a specific Kubernetes controller. By default, DaemonSet is used. The
+`controller.type` value can be used to change the controller to either a
+StatefulSet or Deployment.
+
+Creating multiple installations of the Helm chart with different controllers is
+useful if just using the default DaemonSet isn't sufficient.
 
 ## Values
 
@@ -43,7 +53,7 @@ Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
 | image.pullPolicy | string | `"IfNotPresent"` | Grafana Agent image pull policy. |
 | image.pullSecrets | list | `[]` | Optional set of image pull secrets. |
 | image.repository | string | `"grafana/agent"` | Grafana Agent image repository. |
-| image.tag | string | `"v0.30.1"` | Grafana Agent image tag. |
+| image.tag | string | `"{{ .Chart.AppVersion }}"` | Grafana Agent image tag. |
 | nameOverride | string | `nil` | Overrides the chart's name. Used to change the infix in the resource names. |
 | rbac.create | bool | `true` | Whether to create RBAC resources for the agent. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the created service account. |
