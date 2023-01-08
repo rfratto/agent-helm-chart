@@ -1,6 +1,6 @@
 # Grafana Agent Helm chart
 
-![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
+![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
 
 > **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
 > It is undergoing active development and it is not recommended to use this
@@ -39,6 +39,8 @@ useful if just using the default DaemonSet isn't sufficient.
 | agent.mounts.dockercontainers | bool | `false` | Mount /var/lib/docker/containers from the host into the container for log collection. |
 | agent.mounts.extra | list | `[]` | Extra volume mounts to add into the Grafana Agent container. Does not affect the watch container. |
 | agent.mounts.varlog | bool | `false` | Mount /var/log from the host into the container for log collection. |
+| agent.resources | object | `{}` | Resource requests and limits to apply to the Grafana Agent container. |
+| agent.securityContext | object | `{}` | Security context to apply to the Grafana Agent container. |
 | agent.storagePath | string | `"/tmp/agent"` | Path to where Grafana Agent stores data (for example, the Write-Ahead Log). By default, data is lost between reboots. |
 | configReloader.customArgs | list | `[]` | Override the args passed to the container. |
 | configReloader.enabled | bool | `true` | Enables automatically reloading when the agent config changes. |
@@ -46,8 +48,6 @@ useful if just using the default DaemonSet isn't sufficient.
 | configReloader.image.tag | string | `"master-5fc29a9"` | Tag of image to use for config reloading. |
 | controller.podAnnotations | object | `{}` | Extra pod annotations to add. |
 | controller.replicas | int | `1` | Number of pods to deploy. Ignored when controller.type is 'daemonset'. |
-| controller.resources | object | `{}` | Resource requests and limits to apply to created Grafana Agent pods. |
-| controller.securityContext | object | `{}` | Security context to apply to created Grafana Agent pods. |
 | controller.tolerations | list | `[]` | Tolerations to apply to Grafana Agent pods. |
 | controller.type | string | `"daemonset"` | Type of controller to use for deploying Grafana Agent in the cluster. Must be one of 'daemonset', 'deployment', or 'statefulset'. |
 | controller.updateStrategy | object | `{}` | Update strategy for updating deployed Pods. |

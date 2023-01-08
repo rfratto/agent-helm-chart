@@ -31,11 +31,11 @@
       port: {{ .Values.agent.listenPort }}
     initialDelaySeconds: 10
     timeoutSeconds: 1
-  {{- with .Values.controller.resources }}
+  {{- with .Values.agent.resources }}
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.controller.securityContext }}
+  {{- with .Values.agent.securityContext }}
   securityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
