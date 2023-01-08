@@ -1,0 +1,22 @@
+name: Check Chart tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Check Chart tests
+        run: |
+          make rebuild-tests
+          if ! git diff --exit-code; then
+            echo "Helm chart tests are not up to date. Please run make rebuild-tests and commit changes!" >&2
+            exit 1
+          fi
