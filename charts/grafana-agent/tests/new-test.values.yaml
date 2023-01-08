@@ -1,0 +1,3 @@
+controller:
+  type: statefulset
+  replicas: 12345
