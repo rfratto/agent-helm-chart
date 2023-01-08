@@ -1,0 +1,4 @@
+owner: rfratto
+git-repo: agent-helm-chart
+skip-existing: true
+release-name-template: "helm-chart/{{ .Version }}" # TODO: change when upstreaming
