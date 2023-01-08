@@ -9,3 +9,8 @@ specified.
 {{- include "grafana-agent.fullname" . }}
 {{- end }}
 {{- end }}
+
+{{/*
+The name of the config file is the default or the key the user specified in the
+ConfigMap.
+*/}}

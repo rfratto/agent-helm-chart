@@ -49,6 +49,12 @@ agent:
     # affect the watch container.
     extra: []
 
+  # -- Security context to apply to the Grafana Agent container.
+  securityContext: {}
+
+  # -- Resource requests and limits to apply to the Grafana Agent container.
+  resources: {}
+
 image:
   # -- Grafana Agent image repository.
   repository: grafana/agent
@@ -101,12 +107,6 @@ controller:
 
   # -- Extra pod annotations to add.
   podAnnotations: {}
-
-  # -- Security context to apply to created Grafana Agent pods.
-  securityContext: {}
-
-  # -- Resource requests and limits to apply to created Grafana Agent pods.
-  resources: {}
 
   volumes:
     # -- Extra volumes to add to the Grafana Agent pod.
