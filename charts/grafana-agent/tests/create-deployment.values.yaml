@@ -1,3 +1,4 @@
 # Test rendering of the chart with the controller explicitly set to Deployment.
 controller:
   type: deployment
+  replicas: 15
