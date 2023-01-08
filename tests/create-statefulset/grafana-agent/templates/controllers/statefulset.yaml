@@ -27,7 +27,7 @@ spec:
       serviceAccount: grafana-agent
       containers:
           - name: grafana-agent
-            image: grafana/agent:{{ .Chart.AppVersion }}
+            image: grafana/agent:v0.30.1
             command:
               - /bin/agent
               - run

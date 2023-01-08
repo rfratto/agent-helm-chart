@@ -57,7 +57,7 @@ useful if just using the default DaemonSet isn't sufficient.
 | image.pullPolicy | string | `"IfNotPresent"` | Grafana Agent image pull policy. |
 | image.pullSecrets | list | `[]` | Optional set of image pull secrets. |
 | image.repository | string | `"grafana/agent"` | Grafana Agent image repository. |
-| image.tag | string | `"{{ .Chart.AppVersion }}"` | Grafana Agent image tag. |
+| image.tag | string | `nil` | Grafana Agent image tag. When empty, the Chart's appVersion is used. |
 | nameOverride | string | `nil` | Overrides the chart's name. Used to change the infix in the resource names. |
 | rbac.create | bool | `true` | Whether to create RBAC resources for the agent. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the created service account. |

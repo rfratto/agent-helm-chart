@@ -60,3 +60,14 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Calculate name of image tag to use.
+*/}}
+{{- define "grafana-agent.imageTag" -}}
+{{- if .Values.image.tag -}}
+{{- .Values.image.tag }}
+{{- else -}}
+{{- .Chart.AppVersion }}
+{{- end }}
+{{- end }}

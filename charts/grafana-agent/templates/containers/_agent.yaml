@@ -1,6 +1,6 @@
 {{- define "grafana-agent.container" -}}
 - name: grafana-agent
-  image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+  image: {{ .Values.image.repository }}:{{ include "grafana-agent.imageTag" . }}
   command:
     - /bin/agent
     - run
