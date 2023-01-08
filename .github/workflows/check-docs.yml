@@ -1,0 +1,19 @@
+name: Check docs
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check docs
+        run: |
+          docker run --rm --volume "$(pwd)/charts/grafana-agent:/helm-docs" -u "$(id -u)" jnorwood/helm-docs
+          if ! git diff --exit-code; then
+            echo "Documentation is not up to date. Please run make docs and commit changes!" >&2
+            exit 1
+          fi
