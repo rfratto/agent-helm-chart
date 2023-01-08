@@ -102,5 +102,3 @@ controller:
 
   # -- volumeClaimTemplates to add when controller.type is 'statefulset'.
   volumeClaimTemplates: []
-
-
