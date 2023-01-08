@@ -21,3 +21,9 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Don't package templates.
+README.md.gotmpl
+
+# Don't packages the tests used for CI.
+/tests/
