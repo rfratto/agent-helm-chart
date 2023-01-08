@@ -1,17 +1,17 @@
 # Grafana Agent Helm chart
 
-![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
+![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
 
-> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
-> It is undergoing active development and it is not recommended to use this
-> chart in production.
+> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent. It is
+> undergoing active development and it is not recommended to use this chart in
+> production.
 >
 > The intent is to upstream this Helm chart into grafana/agent once it's ready
 > for adoption.
 
-Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
+Helm chart for deploying [Grafana Agent][] to Kubernetes.
 
-[Flow]: https://grafana.com/docs/agent/latest/flow/
+[Grafana Agent]: https://grafana.com/docs/agent/latest/
 
 ## Usage
 
@@ -23,19 +23,28 @@ StatefulSet or Deployment.
 Creating multiple installations of the Helm chart with different controllers is
 useful if just using the default DaemonSet isn't sufficient.
 
+## Flow mode is the default
+
+By default, [Grafana Agent Flow][Flow] is deployed. To opt out of Flow mode and
+use the older mode (called "static mode"), set the `agent.mode` value to
+`static`.
+
+[Flow]: https://grafana.com/docs/agent/latest/flow/
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | agent.configMap.content | string | `""` | Content to assign to the new ConfigMap. |
 | agent.configMap.create | bool | `true` | Create a new ConfigMap for the config file. |
-| agent.configMap.key | string | `"config.river"` | Key in ConfigMap to get config from. |
+| agent.configMap.key | string | `nil` | Key in ConfigMap to get config from. |
 | agent.configMap.name | string | `nil` | Name of existing ConfigMap to use. Used when create is false. |
 | agent.enableReporting | bool | `true` | Enables sending Grafana Labs anonymous usage stats to help improve Grafana Agent. |
 | agent.extraArgs | list | `[]` | Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/ |
 | agent.extraEnv | list | `[]` | Extra environment variables to pass to the agent container. |
 | agent.listenAddr | string | `"0.0.0.0"` | Address to listen for traffic on. 0.0.0.0 exposes the UI to other containers. |
 | agent.listenPort | int | `80` | Port to listen for traffic on. |
+| agent.mode | string | `"flow"` | Mode to run Grafana Agent in. Can be "flow" or "static". |
 | agent.mounts.dockercontainers | bool | `false` | Mount /var/lib/docker/containers from the host into the container for log collection. |
 | agent.mounts.extra | list | `[]` | Extra volume mounts to add into the Grafana Agent container. Does not affect the watch container. |
 | agent.mounts.varlog | bool | `false` | Mount /var/log from the host into the container for log collection. |
@@ -81,17 +90,6 @@ for network traffic on its HTTP server. By default, this is `0.0.0.0` to allow
 its UI to be exposed when port-forwarding and to expose its metrics to other
 agents in the cluster.
 
-### agent.securityContext
-
-`agent.securityContext` sets the securityContext passed to the Grafana
-Agent container.
-
-By default, Grafana Agent containers are not able to collect telemetry from the
-host node or other specific types of privileged telemetry data. See [Collecting
-logs from other containers][#collecting-logs-from-other-containers] and
-[Collecting host node telemetry][#collecting-host-node-telemetry] below for
-more information on how to enable these capabilities.
-
 ### config
 
 `config` holds the Grafana Agent configuration to use.
@@ -100,6 +98,17 @@ If `config` is not provided, a [default configuration file][default-config] is
 used. When provided, `config` must hold a valid River configuration file.
 
 [default-config]: ./config/example.river
+
+### controller.securityContext
+
+`controller.securityContext` sets the securityContext passed to the Grafana
+Agent container.
+
+By default, Grafana Agent containers are not able to collect telemetry from the
+host node or other specific types of privileged telemetry data. See [Collecting
+logs from other containers][#collecting-logs-from-other-containers] and
+[Collecting host node telemetry][#collecting-host-node-telemetry] below for
+more information on how to enable these capabilities.
 
 ### rbac.create
 
@@ -118,7 +127,7 @@ This capability is disabled by default.
 To expose logs from other containers to Grafana Agent:
 
 * Set `agent.mounts.dockercontainers` to `true`.
-* Set `agent.securityContext` to:
+* Set `controller.securityContext` to:
   ```yaml
   privileged: true
   runAsUser: 0
@@ -133,7 +142,7 @@ To expose this information to Grafana Agent for telemetry collection:
 
 * Set `agent.mounts.dockercontainers` to `true`.
 * Mount `/proc` and `/sys` from the host into the container.
-* Set `agent.securityContext` to:
+* Set `controller.securityContext` to:
   ```yaml
   privileged: true
   runAsUser: 0

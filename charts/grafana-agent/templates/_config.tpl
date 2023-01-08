@@ -14,3 +14,12 @@ specified.
 The name of the config file is the default or the key the user specified in the
 ConfigMap.
 */}}
+{{- define "grafana-agent.config-map.key" -}}
+{{- if .Values.agent.configMap.key -}}
+{{- .Values.agent.configMap.key }}
+{{- else if eq .Values.agent.mode "flow" -}}
+config.river
+{{- else if eq .Values.agent.mode "static" -}}
+config.yaml
+{{- end }}
+{{- end }}

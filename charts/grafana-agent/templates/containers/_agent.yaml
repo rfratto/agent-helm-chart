@@ -3,7 +3,7 @@
   image: {{ .Values.image.repository }}:{{ include "grafana-agent.imageTag" . }}
   args:
     - run
-    - /etc/agent/{{ .Values.agent.configMap.key }}
+    - /etc/agent/{{ include "grafana-agent.config-map.key" . }}
     - --storage.path={{ .Values.agent.storagePath }}
     - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}
     {{- if not .Values.agent.enableReporting }}
@@ -14,7 +14,7 @@
     {{- end}}
   env:
     - name: AGENT_MODE
-      value: flow
+      value: {{ .Values.agent.mode }}
     - name: HOSTNAME
       valueFrom:
         fieldRef:

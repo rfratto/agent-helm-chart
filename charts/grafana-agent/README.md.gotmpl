@@ -2,16 +2,16 @@
 
 {{ template "chart.typeBadge" . }}{{ template "chart.versionBadge" . }}{{ template "chart.appVersionBadge" . }}
 
-> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
-> It is undergoing active development and it is not recommended to use this
-> chart in production.
+> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent. It is
+> undergoing active development and it is not recommended to use this chart in
+> production.
 >
 > The intent is to upstream this Helm chart into grafana/agent once it's ready
 > for adoption.
 
-Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
+Helm chart for deploying [Grafana Agent][] to Kubernetes.
 
-[Flow]: https://grafana.com/docs/agent/latest/flow/
+[Grafana Agent]: https://grafana.com/docs/agent/latest/
 
 ## Usage
 
@@ -22,6 +22,14 @@ StatefulSet or Deployment.
 
 Creating multiple installations of the Helm chart with different controllers is
 useful if just using the default DaemonSet isn't sufficient.
+
+## Flow mode is the default
+
+By default, [Grafana Agent Flow][Flow] is deployed. To opt out of Flow mode and
+use the older mode (called "static mode"), set the `agent.mode` value to
+`static`.
+
+[Flow]: https://grafana.com/docs/agent/latest/flow/
 
 {{ template "chart.valuesSection" . }}
 

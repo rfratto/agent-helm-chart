@@ -1,7 +1,7 @@
 ---
-# Source: grafana-agent/templates/serviceaccount.yaml
+# Source: grafana-agent/templates/configmap.yaml
 apiVersion: v1
-kind: ServiceAccount
+kind: ConfigMap
 metadata:
   name: grafana-agent
   labels:
@@ -10,3 +10,8 @@ metadata:
     app.kubernetes.io/instance: grafana-agent
     app.kubernetes.io/version: "v0.30.1"
     app.kubernetes.io/managed-by: Helm
+data:
+  config.yaml: |- 
+    server:
+      log_level: info
+      log_format: logfmt
