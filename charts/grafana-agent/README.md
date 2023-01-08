@@ -1,6 +1,17 @@
-# grafana-agent
+# Grafana Agent Helm chart
 
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
+
+> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
+> It is undergoing active development and it is not recommended to use this
+> chart in production.
+>
+> The intent is to upstream this Helm chart into grafana/agent once it's ready
+> for adoption.
+
+Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
+
+[Flow]: https://grafana.com/docs/agent/latest/flow/
 
 ## Values
 

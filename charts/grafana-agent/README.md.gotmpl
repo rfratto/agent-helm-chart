@@ -1,6 +1,17 @@
-{{ template "chart.header" . }}
+# Grafana Agent Helm chart
 
 {{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+> **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
+> It is undergoing active development and it is not recommended to use this
+> chart in production.
+>
+> The intent is to upstream this Helm chart into grafana/agent once it's ready
+> for adoption.
+
+Helm chart for deploying [Grafana Agent Flow][Flow] to Kubernetes.
+
+[Flow]: https://grafana.com/docs/agent/latest/flow/
 
 {{ template "chart.valuesSection" . }}
 
