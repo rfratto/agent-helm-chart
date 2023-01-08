@@ -1,11 +1,9 @@
 {{- define "grafana-agent.container" -}}
 - name: grafana-agent
   image: {{ .Values.image.repository }}:{{ include "grafana-agent.imageTag" . }}
-  command:
-    - /bin/agent
+  args:
     - run
     - /etc/agent/{{ .Values.agent.configMap.key }}
-  args:
     - --storage.path={{ .Values.agent.storagePath }}
     - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}
     {{- if not .Values.agent.enableReporting }}
