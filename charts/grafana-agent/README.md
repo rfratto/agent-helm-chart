@@ -1,6 +1,6 @@
 # Grafana Agent Helm chart
 
-![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.1.0-alpha.1](https://img.shields.io/badge/Version-0.1.0--alpha.1-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
+![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![Version: 0.1.0-alpha.2](https://img.shields.io/badge/Version-0.1.0--alpha.2-informational?style=flat-square) ![AppVersion: v0.30.1](https://img.shields.io/badge/AppVersion-v0.30.1-informational?style=flat-square)
 
 > **EXPERIMENTAL**: This is an experimental Helm chart for Grafana Agent Flow.
 > It is undergoing active development and it is not recommended to use this
@@ -27,6 +27,10 @@ useful if just using the default DaemonSet isn't sufficient.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| agent.configMap.content | string | `""` | Content to assign to the new ConfigMap. |
+| agent.configMap.create | bool | `true` | Create a new ConfigMap for the config file. |
+| agent.configMap.key | string | `"config.river"` | Key in ConfigMap to get config from. |
+| agent.configMap.name | string | `nil` | Name of existing ConfigMap to use. Used when create is false. |
 | agent.enableReporting | bool | `true` | Enables sending Grafana Labs anonymous usage stats to help improve Grafana Agent. |
 | agent.extraArgs | list | `[]` | Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/ |
 | agent.extraEnv | list | `[]` | Extra environment variables to pass to the agent container. |
@@ -36,7 +40,6 @@ useful if just using the default DaemonSet isn't sufficient.
 | agent.mounts.extra | list | `[]` | Extra volume mounts to add into the Grafana Agent container. Does not affect the watch container. |
 | agent.mounts.varlog | bool | `false` | Mount /var/log from the host into the container for log collection. |
 | agent.storagePath | string | `"/tmp/agent"` | Path to where Grafana Agent stores data (for example, the Write-Ahead Log). By default, data is lost between reboots. |
-| config | string | `""` | Grafana Agent configuration to use. |
 | configReloader.customArgs | list | `[]` | Override the args passed to the container. |
 | configReloader.enabled | bool | `true` | Enables automatically reloading when the agent config changes. |
 | configReloader.image.repository | string | `"weaveworks/watch"` | Repository to get config reloader image from. |

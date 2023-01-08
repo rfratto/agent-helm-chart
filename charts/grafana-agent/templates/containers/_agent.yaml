@@ -4,7 +4,7 @@
   command:
     - /bin/agent
     - run
-    - /etc/agent/config.river
+    - /etc/agent/{{ .Values.agent.configMap.key }}
   args:
     - --storage.path={{ .Values.agent.storagePath }}
     - --server.http.listen-addr={{ .Values.agent.listenAddr }}:{{ .Values.agent.listenPort }}

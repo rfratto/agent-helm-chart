@@ -5,11 +5,19 @@ nameOverride: null
 # resource names.
 fullnameOverride: null
 
-# -- Grafana Agent configuration to use.
-config: ""
-
 # Various agent settings.
 agent:
+  configMap:
+    # -- Create a new ConfigMap for the config file.
+    create: true
+    # -- Content to assign to the new ConfigMap.
+    content: ""
+
+    # -- Name of existing ConfigMap to use. Used when create is false.
+    name: null
+    # -- Key in ConfigMap to get config from.
+    key: config.river
+
   # -- Path to where Grafana Agent stores data (for example, the Write-Ahead Log).
   # By default, data is lost between reboots.
   storagePath: /tmp/agent

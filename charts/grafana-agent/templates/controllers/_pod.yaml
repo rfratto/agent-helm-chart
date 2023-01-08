@@ -22,7 +22,7 @@ spec:
   volumes:
     - name: config
       configMap:
-        name: {{ include "grafana-agent.fullname" . }}
+        name: {{ include "grafana-agent.config-map.name" . }}
     {{- if .Values.agent.mounts.varlog }}
     - name: varlog
       hostPath:
