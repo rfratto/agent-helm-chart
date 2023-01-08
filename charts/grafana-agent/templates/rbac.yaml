@@ -7,27 +7,18 @@ metadata:
     {{- include "grafana-agent.labels" . | nindent 4 }}
 rules:
   # Rules which allow discovery.kubernetes to function.
-  - apiGroups: [""]
+  - apiGroups:
+      - ""
+      - "discovery.k8s.io"
+      - "networking.k8s.io"
     resources:
+      - endpoints
+      - endpointslices
+      - ingresses
       - nodes
       - nodes/proxy
-      - services
-      - endpoints
       - pods
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups: ["discovery.k8s.io"]
-    resources:
-      - endpointslices
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups: ["networking.k8s.io"]
-    resources:
-      - ingresses
+      - services
     verbs:
       - get
       - list
