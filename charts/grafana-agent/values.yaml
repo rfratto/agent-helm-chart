@@ -24,6 +24,9 @@ agent:
   # Agent.
   enableReporting: true
 
+  # -- Extra environment variables to pass to the agent container.
+  extraEnv: []
+
   # -- Extra args to pass to `agent run`: https://grafana.com/docs/agent/latest/flow/reference/cli/run/
   extraArgs: []
 

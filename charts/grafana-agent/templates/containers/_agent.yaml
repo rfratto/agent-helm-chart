@@ -21,6 +21,9 @@
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
+    {{- range .Values.agent.extraEnv }}
+    - {{- toYaml . | nindent 6 }}
+    {{- end }}
   ports:
     - containerPort: {{ .Values.agent.listenPort }}
       name: http-metrics
@@ -52,6 +55,6 @@
       readOnly: true
     {{- end }}
     {{- range .Values.agent.mounts.extra }}
-    - {{ toYaml . | nindent 6 }}
+    - {{- toYaml . | nindent 6 }}
     {{- end }}
 {{- end }}
