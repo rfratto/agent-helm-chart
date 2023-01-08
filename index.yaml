@@ -3,6 +3,16 @@ entries:
   grafana-agent:
   - apiVersion: v2
     appVersion: v0.30.1
+    created: "2023-01-08T19:13:36.152631685Z"
+    description: Grafana Agent
+    digest: f1698007d081daae1dd98e6775298731700ed3b4578bc576b8b654f1ffc89bf1
+    name: grafana-agent
+    type: application
+    urls:
+    - https://github.com/rfratto/agent-helm-chart/releases/download/helm-chart/0.1.0/grafana-agent-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: v0.30.1
     created: "2023-01-08T18:50:52.803127886Z"
     description: Grafana Agent
     digest: 96171c0e55b279bd3b81ef93f1b9b05bf4c1796bfaab19c5de3ddf76f3abeb53
@@ -41,4 +51,4 @@ entries:
     urls:
     - https://github.com/rfratto/agent-helm-chart/releases/download/helm-chart/0.1.0-alpha.0/grafana-agent-0.1.0-alpha.0.tgz
     version: 0.1.0-alpha.0
-generated: "2023-01-08T18:50:52.803174586Z"
+generated: "2023-01-08T19:13:36.152662185Z"
